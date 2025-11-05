@@ -204,6 +204,34 @@ export const n8nManagementTools: ToolDefinition[] = [
     }
   },
   {
+    name: 'n8n_activate_workflow',
+    description: `Activate a workflow to enable automatic execution. Workflow must have at least one enabled trigger node.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Workflow ID to activate'
+        }
+      },
+      required: ['id']
+    }
+  },
+  {
+    name: 'n8n_deactivate_workflow',
+    description: `Deactivate a workflow to prevent automatic execution. The workflow can still be executed manually.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Workflow ID to deactivate'
+        }
+      },
+      required: ['id']
+    }
+  },
+  {
     name: 'n8n_list_workflows',
     description: `List workflows (minimal metadata only). Returns id/name/active/dates/tags. Check hasMore/nextCursor for pagination.`,
     inputSchema: {

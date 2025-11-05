@@ -818,6 +818,78 @@ export async function handleDeleteWorkflow(args: unknown, context?: InstanceCont
   }
 }
 
+export async function handleActivateWorkflow(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const client = ensureApiConfigured(context);
+    const { id } = z.object({ id: z.string() }).parse(args);
+
+    const workflow = await client.activateWorkflow(id);
+
+    return {
+      success: true,
+      data: workflow,
+      message: `Workflow ${id} (${workflow.name}) activated successfully`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleDeactivateWorkflow(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const client = ensureApiConfigured(context);
+    const { id } = z.object({ id: z.string() }).parse(args);
+
+    const workflow = await client.deactivateWorkflow(id);
+
+    return {
+      success: true,
+      data: workflow,
+      message: `Workflow ${id} (${workflow.name}) deactivated successfully`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
 export async function handleListWorkflows(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
   try {
     const client = ensureApiConfigured(context);
@@ -1561,7 +1633,6 @@ export async function handleListAvailableTools(context?: InstanceContext): Promi
         maxRetries: config.maxRetries
       } : null,
       limitations: [
-        'Cannot activate/deactivate workflows via API',
         'Cannot execute workflows directly (must use webhooks)',
         'Cannot stop running executions',
         'Tags and credentials have limited API support'

@@ -170,6 +170,24 @@ export class N8nApiClient {
     }
   }
 
+  async activateWorkflow(id: string): Promise<Workflow> {
+    try {
+      const response = await this.client.post(`/workflows/${id}/activate`);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  async deactivateWorkflow(id: string): Promise<Workflow> {
+    try {
+      const response = await this.client.post(`/workflows/${id}/deactivate`);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
   /**
    * Lists workflows from n8n instance.
    *
