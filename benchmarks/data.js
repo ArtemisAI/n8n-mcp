@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762371611696,
+  "lastUpdate": 1762372723076,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -23,6 +23,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/a4ef1efaf87795bafda3e230ffb2c0b4e3fcb253"
         },
         "date": 1762371610936,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": false,
+          "id": "fc82c0bef529af8e42fb6b28b584cea3da1e74f4",
+          "message": "feat: add workflow activation/deactivation via dedicated API endpoints\n\nAdd support for activating and deactivating n8n workflows using the\ndedicated POST /workflows/{id}/activate and POST /workflows/{id}/deactivate\nendpoints that were previously not utilized by n8n-mcp.\n\nChanges:\n- Add activateWorkflow() and deactivateWorkflow() methods to N8nApiClient\n- Add n8n_activate_workflow and n8n_deactivate_workflow MCP tools\n- Add handleActivateWorkflow() and handleDeactivateWorkflow() handlers\n- Register new tools in server validation and handler routing\n- Remove outdated 'Cannot activate/deactivate workflows via API' limitation\n\nPreviously, n8n-mcp used PUT /workflows/{id} which ignores the active flag.\nThis implementation uses the correct endpoints that properly handle workflow\nstate changes.\n\nTested with n8n v1.114.4\nAPI Version: Requires n8n v1.0+ (when activation endpoints were added)\nBackward compatible with existing workflows\n\nFixes workflow activation not working via n8n-mcp tools",
+          "timestamp": "2025-11-05T13:16:38-05:00",
+          "tree_id": "66580462a16b5a56292c28892173d6bb321988cd",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/fc82c0bef529af8e42fb6b28b584cea3da1e74f4"
+        },
+        "date": 1762372722827,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
