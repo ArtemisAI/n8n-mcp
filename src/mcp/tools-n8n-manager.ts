@@ -460,6 +460,24 @@ Examples:
       required: ['id']
     }
   },
+  {
+    name: 'n8n_retry_execution',
+    description: `Retry a failed execution with the same input data. Uses n8n API's retry endpoint to re-run the workflow.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { 
+          type: 'string', 
+          description: 'Execution ID to retry' 
+        },
+        loadWorkflow: { 
+          type: 'boolean', 
+          description: 'Whether to load the workflow definition (default: true)' 
+        }
+      },
+      required: ['id']
+    }
+  },
 
   // System Tools
   {

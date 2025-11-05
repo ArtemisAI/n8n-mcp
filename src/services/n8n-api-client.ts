@@ -252,6 +252,17 @@ export class N8nApiClient {
     }
   }
 
+  async retryExecution(id: string, loadWorkflow: boolean = true): Promise<Execution> {
+    try {
+      const response = await this.client.post(`/executions/${id}/retry`, {
+        loadWorkflow
+      });
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
   // Webhook Execution
   async triggerWebhook(request: WebhookRequest): Promise<any> {
     try {

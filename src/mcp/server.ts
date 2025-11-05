@@ -717,6 +717,7 @@ export class N8NDocumentationMCPServer {
       case 'n8n_autofix_workflow':
       case 'n8n_get_execution':
       case 'n8n_delete_execution':
+      case 'n8n_retry_execution':
         validationResult = ToolValidation.validateWorkflowId(args);
         break;
       default:
@@ -1054,6 +1055,9 @@ export class N8NDocumentationMCPServer {
       case 'n8n_delete_execution':
         this.validateToolParams(name, args, ['id']);
         return n8nHandlers.handleDeleteExecution(args, this.instanceContext);
+      case 'n8n_retry_execution':
+        this.validateToolParams(name, args, ['id']);
+        return n8nHandlers.handleRetryExecution(args, this.instanceContext);
       case 'n8n_health_check':
         // No required parameters
         return n8nHandlers.handleHealthCheck(this.instanceContext);

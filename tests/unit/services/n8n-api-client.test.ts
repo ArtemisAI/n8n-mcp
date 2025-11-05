@@ -710,6 +710,67 @@ describe('N8nApiClient', () => {
     });
   });
 
+  describe('retryExecution', () => {
+    beforeEach(() => {
+      client = new N8nApiClient(defaultConfig);
+    });
+
+    it('should retry execution with default loadWorkflow parameter', async () => {
+      const mockExecution = {
+        id: '456',
+        finished: true,
+        mode: 'manual',
+        retryOf: '123',
+        status: ExecutionStatus.SUCCESS,
+        startedAt: '2025-11-05T20:00:00Z',
+        workflowId: '1',
+      };
+
+      mockAxiosInstance.post.mockResolvedValue({ data: mockExecution });
+      
+      const result = await client.retryExecution('123');
+      
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/executions/123/retry', {
+        loadWorkflow: true
+      });
+      expect(result).toEqual(mockExecution);
+    });
+
+    it('should retry execution with loadWorkflow set to false', async () => {
+      const mockExecution = {
+        id: '456',
+        finished: true,
+        mode: 'manual',
+        retryOf: '123',
+        status: ExecutionStatus.SUCCESS,
+        startedAt: '2025-11-05T20:00:00Z',
+        workflowId: '1',
+      };
+
+      mockAxiosInstance.post.mockResolvedValue({ data: mockExecution });
+      
+      const result = await client.retryExecution('123', false);
+      
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/executions/123/retry', {
+        loadWorkflow: false
+      });
+      expect(result).toEqual(mockExecution);
+    });
+
+    it('should handle retry execution error', async () => {
+      mockAxiosInstance.post.mockRejectedValue(
+        createAxiosError({
+          response: {
+            status: 404,
+            data: { message: 'Execution not found' },
+          },
+        })
+      );
+
+      await expect(client.retryExecution('999')).rejects.toThrow(N8nNotFoundError);
+    });
+  });
+
   describe('triggerWebhook', () => {
     beforeEach(() => {
       client = new N8nApiClient(defaultConfig);
