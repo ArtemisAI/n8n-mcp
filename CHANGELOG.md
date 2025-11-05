@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🔧 Project Branding & Attribution Updates
+
+**ArtemisAI Fork Branding Implementation**
+
+Updated project branding and attribution to properly reflect ArtemisAI ownership while maintaining credit to the original creator.
+
+#### Changes Made
+
+**Package Metadata Updates:**
+- Updated `package.json` author field to "Artemis Applied Research @ ArtemisAI - Fork of Romuald Członkowski's n8n-mcp"
+- Changed repository URL from `czlonkowski/n8n-mcp` to `ArtemisAI/n8n-mcp`
+- Updated bugs and homepage URLs to point to ArtemisAI fork
+- Updated `package.runtime.json` to match main package metadata
+
+**README.md Enhancements:**
+- Updated GitHub badges (stars, issues, forks) to point to ArtemisAI repository
+- Updated Docker badge to reference ArtemisAI Docker Hub repository
+- Added comprehensive attribution section crediting original author Romuald Członkowski
+- Established clear fork ownership while maintaining proper credit attribution
+
+**Attribution Structure:**
+- **Original Author:** Romuald Członkowski - Creator of n8n-mcp
+- **Fork & Enhancements:** Artemis Applied Research - Advanced features and upstream contributions
+- **Repository:** https://github.com/ArtemisAI/n8n-mcp
+- **Original Repository:** https://github.com/czlonkowski/n8n-mcp
+
+#### Impact
+
+- ✅ **Proper Attribution:** Maintains credit to original creator while establishing fork ownership
+- ✅ **Clear Ownership:** All links and references now point to ArtemisAI fork
+- ✅ **Professional Branding:** Consistent ArtemisAI branding across all project metadata
+- ✅ **Community Standards:** Follows open source best practices for fork attribution
+
+#### Files Updated
+
+- `package.json` - Author, repository, bugs, homepage fields
+- `package.runtime.json` - Synchronized with main package
+- `README.md` - Badges, attribution section, repository references
+
+Conceived by Romuald Członkowski - [www.aiadvisors.pl/en](https://www.aiadvisors.pl/en)
+
 ### ✨ Features
 
 **n8n_retry_execution: Retry Failed Executions**
