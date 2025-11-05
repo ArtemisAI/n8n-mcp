@@ -1476,6 +1476,52 @@ export async function handleDeleteExecution(args: unknown, context?: InstanceCon
   }
 }
 
+export async function handleRetryExecution(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const client = ensureApiConfigured(context);
+    const { id, loadWorkflow = true } = z.object({
+      id: z.string(),
+      loadWorkflow: z.boolean().optional().default(true)
+    }).parse(args);
+    
+    const execution = await client.retryExecution(id, loadWorkflow);
+    
+    return {
+      success: true,
+      message: `Execution ${id} retried successfully. New execution ID: ${execution.id}`,
+      data: {
+        newExecutionId: execution.id,
+        status: execution.status,
+        workflowId: execution.workflowId,
+        workflowName: execution.workflowName,
+        retryOf: execution.retryOf,
+        startedAt: execution.startedAt
+      }
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
 // System Tools Handlers
 
 export async function handleHealthCheck(context?: InstanceContext): Promise<McpToolResponse> {

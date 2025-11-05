@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Features
+
+**n8n_retry_execution: Retry Failed Executions**
+
+Added new `n8n_retry_execution` tool that enables automated retry of failed workflow executions using the n8n API's retry endpoint.
+
+#### Features
+- Retry failed executions with the same input data
+- Optional `loadWorkflow` parameter (default: true)
+- Returns new execution ID with retry tracking information
+- Maintains link between original and retry executions via `retryOf` field
+
+#### Implementation
+- **API Client**: Added `retryExecution(id, loadWorkflow)` method to N8nApiClient
+- **Tool**: New `n8n_retry_execution` tool with Zod validation
+- **Handler**: Comprehensive error handling for retry operations
+- **Tests**: Unit tests for API client and integration tests for handler
+
+#### Benefits
+- Reduce manual intervention for transient failures
+- Enable automated error recovery workflows
+- Improve reliability of long-running workflows
+- Support for retry tracking and monitoring
+
 ## [2.22.10] - 2025-11-04
 
 ### 🐛 Bug Fixes
