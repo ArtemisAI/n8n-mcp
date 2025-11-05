@@ -989,6 +989,7 @@ These powerful tools allow you to manage n8n workflows directly from Claude. The
 - **`n8n_trigger_webhook_workflow`** - Trigger workflows via webhook URL
 - **`n8n_get_execution`** - Get execution details by ID
 - **`n8n_list_executions`** - List executions with status filtering
+- **`n8n_retry_execution`** - Retry failed executions with same input data (NEW in v2.22.10!)
 - **`n8n_delete_execution`** - Delete execution records
 
 #### System Tools
