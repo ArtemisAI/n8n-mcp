@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762410872981,
+  "lastUpdate": 1762443692449,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -147,6 +147,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/a0e4077034fa4b5eb23d39a32fe15396b9622ac5"
         },
         "date": 1762410872741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": true,
+          "id": "3291ae8fcc749929baf7e2ed982f08b71d5d97e0",
+          "message": "chore: use upstream database version",
+          "timestamp": "2025-11-06T10:39:40-05:00",
+          "tree_id": "32029e46e27339ab3df27994c5eb95e271d78121",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/3291ae8fcc749929baf7e2ed982f08b71d5d97e0"
+        },
+        "date": 1762443692167,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
