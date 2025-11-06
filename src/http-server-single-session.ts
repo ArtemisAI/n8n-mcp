@@ -7,7 +7,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { N8NDocumentationMCPServer } from './mcp/server';
 import { ConsoleManager } from './utils/console-manager';
 import { logger } from './utils/logger';
@@ -45,11 +44,10 @@ const SESSION_CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 interface Session {
   server: N8NDocumentationMCPServer;
-  transport: StreamableHTTPServerTransport | SSEServerTransport;
+  transport: StreamableHTTPServerTransport;
   lastAccess: Date;
   sessionId: string;
   initialized: boolean;
-  isSSE: boolean;
 }
 
 interface SessionMetrics {
@@ -78,7 +76,6 @@ export class SingleSessionHTTPServer {
   private sessionMetadata: { [sessionId: string]: { lastAccess: Date; createdAt: Date } } = {};
   private sessionContexts: { [sessionId: string]: InstanceContext | undefined } = {};
   private contextSwitchLocks: Map<string, Promise<void>> = new Map();
-  private session: Session | null = null;  // Keep for SSE compatibility
   private consoleManager = new ConsoleManager();
   private expressServer: any;
   private sessionTimeout = 30 * 60 * 1000; // 30 minutes
@@ -628,61 +625,6 @@ export class SingleSessionHTTPServer {
     });
   }
   
-
-  /**
-   * Reset the session for SSE - clean up old and create new SSE transport
-   */
-  private async resetSessionSSE(res: express.Response): Promise<void> {
-    // Clean up old session if exists
-    if (this.session) {
-      try {
-        logger.info('Closing previous session for SSE', { sessionId: this.session.sessionId });
-        await this.session.transport.close();
-      } catch (error) {
-        logger.warn('Error closing previous session:', error);
-      }
-    }
-    
-    try {
-      // Create new session
-      logger.info('Creating new N8NDocumentationMCPServer for SSE...');
-      const server = new N8NDocumentationMCPServer();
-      
-      // Generate cryptographically secure session ID
-      const sessionId = uuidv4();
-      
-      logger.info('Creating SSEServerTransport...');
-      const transport = new SSEServerTransport('/mcp', res);
-      
-      logger.info('Connecting server to SSE transport...');
-      await server.connect(transport);
-      
-      // Note: server.connect() automatically calls transport.start(), so we don't need to call it again
-      
-      this.session = {
-        server,
-        transport,
-        lastAccess: new Date(),
-        sessionId,
-        initialized: false,
-        isSSE: true
-      };
-      
-      logger.info('Created new SSE session successfully', { sessionId: this.session.sessionId });
-    } catch (error) {
-      logger.error('Failed to create SSE session:', error);
-      throw error;
-    }
-  }
-  
-  /**
-   * Check if current session is expired
-   */
-  private isExpired(): boolean {
-    if (!this.session) return true;
-    return Date.now() - this.session.lastAccess.getTime() > this.sessionTimeout;
-  }
-  
   /**
    * Start the HTTP server
    */
@@ -796,9 +738,8 @@ export class SingleSessionHTTPServer {
           defaultToken: isDefaultToken,
           tokenLength: this.authToken?.length || 0
         },
-        activeTransports: activeTransports.length, // Legacy field
-        activeServers: activeServers.length, // Legacy field
-        legacySessionActive: !!this.session, // For SSE compatibility
+        activeTransports: activeTransports.length,
+        activeServers: activeServers.length,
         memory: {
           used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
           total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
@@ -851,7 +792,7 @@ export class SingleSessionHTTPServer {
       res.json(testResponse);
     });
 
-    // MCP information endpoint (no auth required for discovery) and SSE support
+    // MCP information endpoint (no auth required for discovery)
     app.get('/mcp', async (req, res) => {
       // Handle StreamableHTTP transport requests with new pattern
       const sessionId = req.headers['mcp-session-id'] as string | undefined;
@@ -866,29 +807,6 @@ export class SingleSessionHTTPServer {
         }
       }
       
-      // Check Accept header for text/event-stream (SSE support)
-      const accept = req.headers.accept;
-      if (accept && accept.includes('text/event-stream')) {
-        logger.info('SSE stream request received - establishing SSE connection');
-        
-        try {
-          // Create or reset session for SSE
-          await this.resetSessionSSE(res);
-          logger.info('SSE connection established successfully');
-        } catch (error) {
-          logger.error('Failed to establish SSE connection:', error);
-          res.status(500).json({
-            jsonrpc: '2.0',
-            error: {
-              code: -32603,
-              message: 'Failed to establish SSE connection'
-            },
-            id: null
-          });
-        }
-        return;
-      }
-
       // In n8n mode, return protocol version and server info
       if (process.env.N8N_MODE === 'true') {
         // Negotiate protocol version for n8n mode
@@ -933,7 +851,7 @@ export class SingleSessionHTTPServer {
           },
           root: {
             method: 'GET',
-            path: '/',
+            path: '/mcp',
             description: 'API information',
             authentication: 'None'
           }
@@ -1149,12 +1067,8 @@ export class SingleSessionHTTPServer {
         return;
       }
       
-      // Handle request with single session
-      logger.info('Authentication successful - proceeding to handleRequest', {
-        hasSession: !!this.session,
-        sessionType: this.session?.isSSE ? 'SSE' : 'StreamableHTTP',
-        sessionInitialized: this.session?.initialized
-      });
+      // Handle request with StreamableHTTP transport
+      logger.info('Authentication successful - proceeding to handleRequest');
 
       // Extract instance context from headers if present (for multi-tenant support)
       const instanceContext: InstanceContext | undefined = (() => {
@@ -1423,7 +1337,6 @@ export class SingleSessionHTTPServer {
           'GET /info',
           'GET /tools',
           'GET /metrics',
-          'GET /mcp (SSE)',
           'POST /mcp'
         ]
       });
@@ -1538,17 +1451,6 @@ export class SingleSessionHTTPServer {
       }
     }
     
-    // Clean up legacy session (for SSE compatibility)
-    if (this.session) {
-      try {
-        await this.session.transport.close();
-        logger.info('Legacy session closed');
-      } catch (error) {
-        logger.warn('Error closing legacy session:', error);
-      }
-      this.session = null;
-    }
-    
     // Close Express server
     if (this.expressServer) {
       await new Promise<void>((resolve) => {
@@ -1579,24 +1481,8 @@ export class SingleSessionHTTPServer {
   } {
     const metrics = this.getSessionMetrics();
     
-    // Legacy SSE session info
-    if (!this.session) {
-      return { 
-        active: false,
-        sessions: {
-          total: metrics.totalSessions,
-          active: metrics.activeSessions,
-          expired: metrics.expiredSessions,
-          max: MAX_SESSIONS,
-          sessionIds: Object.keys(this.transports)
-        }
-      };
-    }
-    
-    return {
+    return { 
       active: true,
-      sessionId: this.session.sessionId,
-      age: Date.now() - this.session.lastAccess.getTime(),
       sessions: {
         total: metrics.totalSessions,
         active: metrics.activeSessions,
