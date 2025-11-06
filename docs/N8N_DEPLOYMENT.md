@@ -420,7 +420,7 @@ docker compose up -d
    
    Auth Token: [Your MCP_AUTH_TOKEN/AUTH_TOKEN value]
    
-   Transport: HTTP Streamable (SSE)
+   Transport: HTTP Streamable
    ```
    
    ⚠️ **Critical**: The Server URL must include the `/mcp` endpoint path. Without this, the connection will fail.

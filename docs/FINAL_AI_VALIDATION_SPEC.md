@@ -2536,10 +2536,10 @@ function validateAIAgentTool(
 - `useCustomInputSchema`: Whether to override tool's input schema
 
 **MCP Server Configuration**:
-- `transport`: "stdio" or "sse" (Server-Sent Events)
+- `transport`: "stdio" or "http" (HTTP Streamable)
 - `command`: Executable command (for stdio)
 - `args`: Command arguments (for stdio)
-- `url`: Server URL (for SSE)
+- `url`: Server URL (for HTTP)
 - `env`: Environment variables
 
 **Critical Requirements**:
@@ -2576,7 +2576,7 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
     if (!mcpServer.transport) {
       issues.push({
         severity: 'error',
-        message: `MCP Client Tool "${node.name}" has MCP server with no transport specified. Set transport to "stdio" or "sse".`
+        message: `MCP Client Tool "${node.name}" has MCP server with no transport specified. Set transport to "stdio" or "http".`
       });
     } else if (mcpServer.transport === 'stdio') {
       // Stdio transport requires command
@@ -2586,12 +2586,12 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
           message: `MCP Client Tool "${node.name}" uses stdio transport but has no command specified. Provide the executable command.`
         });
       }
-    } else if (mcpServer.transport === 'sse') {
-      // SSE transport requires URL
+    } else if (mcpServer.transport === 'http') {
+      // HTTP transport requires URL
       if (!mcpServer.url) {
         issues.push({
           severity: 'error',
-          message: `MCP Client Tool "${node.name}" uses SSE transport but has no URL specified. Provide the server URL.`
+          message: `MCP Client Tool "${node.name}" uses HTTP transport but has no URL specified. Provide the server URL.`
         });
       } else {
         // Validate URL format
@@ -2607,7 +2607,7 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
     } else {
       issues.push({
         severity: 'error',
-        message: `MCP Client Tool "${node.name}" has invalid transport "${mcpServer.transport}". Must be "stdio" or "sse".`
+        message: `MCP Client Tool "${node.name}" has invalid transport "${mcpServer.transport}". Must be "stdio" or "http".`
       });
     }
   }
@@ -2705,7 +2705,7 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
     "description": "Access remote API through MCP server",
     "mcpServer": {
       "name": "api-server",
-      "transport": "sse",
+      "transport": "http",
       "url": "https://mcp.example.com/api"
     },
     "tool": "fetch_data",
@@ -2760,12 +2760,12 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
 }
 ```
 
-❌ **INCORRECT - SSE Without URL**:
+❌ **INCORRECT - HTTP Without URL**:
 ```json
 {
   "parameters": {
     "mcpServer": {
-      "transport": "sse"
+      "transport": "http"
       // Missing url!
     },
     "tool": "fetch_data"
@@ -2828,11 +2828,11 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
 }
 ```
 
-**Remote SSE Server**:
+**Remote HTTP Server**:
 ```json
 {
-  "transport": "sse",
-  "url": "https://your-mcp-server.com/sse"
+  "transport": "http",
+  "url": "https://your-mcp-server.com/mcp"
 }
 ```
 
