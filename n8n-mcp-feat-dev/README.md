@@ -19,14 +19,14 @@ This directory contains detailed specifications for implementing missing n8n API
 | 002 | Workflow Deactivation | HIGH | Low | ✅ Complete | Merged to main | 2025-11-04 |
 | 003 | Retry Execution | HIGH | Low | ✅ Complete | Merged to main | Tested 2025-11-05 |
 | 004 | Credential Management | CRUCIAL | High | ✅ Complete | Merged to main | 4 working tools, 2025-11-06 |
+| 006 | Tag Management | MEDIUM | Low-Medium | ✅ Complete | Merged to main | 6 working tools, 2025-11-06 |
+| 009 | Variable Management | MEDIUM | Low | ✅ Complete | Merged to main | 5 working tools, 2025-11-06 |
 
 ### 🔨 Pending Implementation
 
 | # | Feature | Priority | Complexity | Est. Hours | Dependencies | Issue |
 |---|---------|----------|------------|------------|--------------|-------|
 | 005 | User Management | HIGH ⚡ | Medium | 6-8 | Multi-user instance | [#3](https://github.com/ArtemisAI/n8n-mcp/issues/3) |
-| 006 | Tag Management | MEDIUM 📊 | Low-Medium | 4-6 | None | [#4](https://github.com/ArtemisAI/n8n-mcp/issues/4) |
-| 009 | Variable Management | MEDIUM 📊 | Low | 3-4 | None | [#5](https://github.com/ArtemisAI/n8n-mcp/issues/5) |
 | 010 | Source Control Pull | LOW 📝 | Low | 2-3 | Git integration | [#7](https://github.com/ArtemisAI/n8n-mcp/issues/7) |
 | 011 | Project Management | LOW 📝 | Medium | 6-8 | Enterprise feature | [#6](https://github.com/ArtemisAI/n8n-mcp/issues/6) |
 
