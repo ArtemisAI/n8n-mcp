@@ -851,7 +851,7 @@ export class SingleSessionHTTPServer {
           },
           root: {
             method: 'GET',
-            path: '/mcp',
+            path: '/',
             description: 'API information',
             authentication: 'None'
           }
@@ -1332,6 +1332,7 @@ export class SingleSessionHTTPServer {
         error: 'Not found',
         message: `Cannot ${req.method} ${req.path}`,
         availableEndpoints: [
+          'GET /',
           'GET /health',
           'GET /info',
           'GET /tools',
@@ -1481,9 +1482,10 @@ export class SingleSessionHTTPServer {
     };
   } {
     const metrics = this.getSessionMetrics();
+    const hasActiveSessions = Object.keys(this.transports).length > 0;
     
     return { 
-      active: true,
+      active: hasActiveSessions,
       sessions: {
         total: metrics.totalSessions,
         active: metrics.activeSessions,
