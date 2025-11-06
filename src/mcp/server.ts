@@ -741,7 +741,7 @@ export class N8NDocumentationMCPServer {
         return this.validateToolParamsBasic(toolName, args, legacyRequiredParams || []);
       }
       
-      if (!validationResult.valid) {
+      if (validationResult && !validationResult.valid) {
         const errorMessage = Validator.formatErrors(validationResult, toolName);
         logger.error(`Parameter validation failed for ${toolName}:`, errorMessage);
         throw new ValidationError(errorMessage);

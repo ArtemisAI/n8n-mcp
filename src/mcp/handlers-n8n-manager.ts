@@ -2585,7 +2585,7 @@ export async function handleUpdateWorkflowTags(args: unknown, context?: Instance
     const client = ensureApiConfigured(context);
     
     // Get workflow name for better messaging
-    const workflow = await client.getWorkflowById(validatedArgs.workflowId);
+    const workflow = await client.getWorkflow(validatedArgs.workflowId);
     
     const result = await client.updateWorkflowTags(
       validatedArgs.workflowId,
