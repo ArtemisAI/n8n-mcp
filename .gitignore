@@ -6,6 +6,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 .mcp/n8n-mcp/n8n-mcp-feat-dev/
+_Archive/
 
 # Environment variables
 .env
