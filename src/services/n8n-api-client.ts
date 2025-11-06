@@ -390,6 +390,15 @@ export class N8nApiClient {
     }
   }
 
+  async getTag(id: string): Promise<Tag> {
+    try {
+      const response = await this.client.get(`/tags/${id}`);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
   async updateTag(id: string, tag: Partial<Tag>): Promise<Tag> {
     try {
       const response = await this.client.patch(`/tags/${id}`, tag);
@@ -402,6 +411,21 @@ export class N8nApiClient {
   async deleteTag(id: string): Promise<void> {
     try {
       await this.client.delete(`/tags/${id}`);
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  async updateWorkflowTags(
+    workflowId: string,
+    tagIds: string[]
+  ): Promise<{ id: string; tags: Tag[] }> {
+    try {
+      const response = await this.client.put<{ id: string; tags: Tag[] }>(
+        `/workflows/${workflowId}/tags`,
+        { tags: tagIds }
+      );
+      return response.data;
     } catch (error) {
       throw handleN8nApiError(error);
     }

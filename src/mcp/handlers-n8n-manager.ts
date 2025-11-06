@@ -2444,3 +2444,167 @@ export async function handleWorkflowVersions(
     };
   }
 }
+
+// ========================================================================
+// Tag Management Handlers
+// ========================================================================
+
+export async function handleCreateTag(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      name: z.string().min(1, 'Tag name is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    const tag = await client.createTag({ name: validatedArgs.name });
+    
+    return {
+      success: true,
+      data: tag,
+      message: `Tag "${tag.name}" created successfully. ID: ${tag.id}`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleListTags(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const client = ensureApiConfigured(context);
+    const result = await client.listTags();
+    
+    return {
+      success: true,
+      data: {
+        tags: result.data,
+        count: result.data.length
+      },
+      message: `Found ${result.data.length} tag${result.data.length !== 1 ? 's' : ''}`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleGetTag(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Tag ID is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    const tag = await client.getTag(validatedArgs.id);
+    
+    return {
+      success: true,
+      data: tag,
+      message: `Tag "${tag.name}" is used by ${tag.workflowCount || 0} workflow${tag.workflowCount !== 1 ? 's' : ''}`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleUpdateTag(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Tag ID is required'),
+      name: z.string().min(1, 'Tag name is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    const tag = await client.updateTag(validatedArgs.id, { name: validatedArgs.name });
+    
+    return {
+      success: true,
+      data: tag,
+      message: `Tag renamed to "${tag.name}"`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleDeleteTag(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Tag ID is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    // Get tag details before deletion
+    const tag = await client.getTag(validatedArgs.id);
+    
+    await client.deleteTag(validatedArgs.id);
+    
+    return {
+      success: true,
+      data: {
+        id: validatedArgs.id,
+        name: tag.name,
+        deleted: true
+      },
+      message: `Tag "${tag.name}" deleted successfully. Removed from ${tag.workflowCount || 0} workflow${tag.workflowCount !== 1 ? 's' : ''}.`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+export async function handleUpdateWorkflowTags(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      workflowId: z.string().min(1, 'Workflow ID is required'),
+      tagIds: z.array(z.string())
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    // Get workflow name for better messaging
+    const workflow = await client.getWorkflowById(validatedArgs.workflowId);
+    
+    const result = await client.updateWorkflowTags(
+      validatedArgs.workflowId,
+      validatedArgs.tagIds
+    );
+    
+    const tagNames = result.tags.map(t => t.name).join(', ');
+    
+    return {
+      success: true,
+      data: result,
+      message: validatedArgs.tagIds.length > 0
+        ? `Workflow "${workflow.name}" tagged with: ${tagNames}`
+        : `All tags removed from workflow "${workflow.name}"`
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}

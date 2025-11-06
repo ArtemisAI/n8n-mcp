@@ -139,6 +139,7 @@ export interface Tag {
   id?: string;
   name: string;
   workflowIds?: string[];
+  workflowCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
