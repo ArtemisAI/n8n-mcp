@@ -1,9 +1,9 @@
 # Feature: Credential Management
 
 ## Priority: CRUCIAL ⚠️
-**Status**: Pending Implementation  
+**Status**: ⚠️ PARTIALLY IMPLEMENTED (API Limitations Discovered)
 **Complexity**: High (Security-sensitive, requires careful handling)  
-**Estimated Effort**: 8-12 hours
+**Estimated Effort**: 8-12 hours (6 hours spent, feature limited by n8n API)
 
 ## Problem Statement
 Credentials are essential for n8n workflows to connect to external services (APIs, databases, cloud services). Currently, MCP has **zero** credential management capabilities, forcing users to:
@@ -40,7 +40,9 @@ Create MCP tools for credential lifecycle management with proper security contro
 
 ## API Endpoints
 
-### 1. POST `/credentials`
+⚠️ **CRITICAL DISCOVERY**: n8n API does NOT support listing credentials. The original specification was based on assumed endpoints that don't exist. Below are the **ACTUAL** endpoints supported by n8n API v1:
+
+### 1. POST `/credentials` ✅ SUPPORTED
 **Purpose**: Create a new credential
 
 **Request**:
@@ -75,7 +77,7 @@ X-N8N-API-KEY: <api-key>
 }
 ```
 
-### 2. GET `/credentials/{id}`
+### 2. GET `/credentials/{id}` ✅ SUPPORTED
 **Purpose**: Get credential metadata (NOT the actual secret data)
 
 **Request**:
@@ -96,16 +98,28 @@ X-N8N-API-KEY: <api-key>
 }
 ```
 
-### 3. GET `/credentials`
-**Purpose**: List all credentials (metadata only)
+### 3. ~~GET `/credentials`~~ ❌ NOT SUPPORTED BY n8n API
+**Original Purpose**: List all credentials (metadata only)
 
-**Request**:
+**REALITY**: This endpoint **DOES NOT EXIST** in n8n API. The original specification was incorrect.
+
+**What Copilot Built**: A `listCredentials()` method that calls `GET /credentials` - which returns 405 Method Not Allowed.
+
+**Why It Fails**: n8n intentionally does not provide a credential listing endpoint for security reasons. You can only:
+- Create credentials (POST)
+- Get individual credentials by ID (GET /{id})
+- Get credential schemas (GET /schema/{type})
+- Delete credentials (DELETE /{id})
+
+**Impact**: The `n8n_list_credentials` tool is **NON-FUNCTIONAL** and should be removed.
+
+~~**Request**:~~
 ```http
 GET /api/v1/credentials?filter={"type":"gmailOAuth2Api"}
 X-N8N-API-KEY: <api-key>
 ```
 
-**Response**: `200 OK`
+~~**Response**: `200 OK`~~
 ```json
 {
   "data": [
@@ -120,7 +134,7 @@ X-N8N-API-KEY: <api-key>
 }
 ```
 
-### 4. DELETE `/credentials/{id}`
+### 4. DELETE `/credentials/{id}` ⚠️ NEEDS VERIFICATION
 **Purpose**: Delete a credential
 
 **Request**:
@@ -137,7 +151,7 @@ X-N8N-API-KEY: <api-key>
 }
 ```
 
-### 5. GET `/credentials/schema/{credentialTypeName}`
+### 5. GET `/credentials/schema/{credentialTypeName}` ✅ SUPPORTED
 **Purpose**: Get credential type schema (for form building)
 
 **Request**:
@@ -170,10 +184,12 @@ X-N8N-API-KEY: <api-key>
 }
 ```
 
-### 6. PATCH `/credentials/{id}`
-**Purpose**: Update credential metadata (name, etc.)
+### 6. ~~PATCH `/credentials/{id}`~~ ❌ NOT VERIFIED
+**Original Purpose**: Update credential metadata (name, etc.)
 
-**Request**:
+**Status**: NOT CONFIRMED in n8n API spec. May not exist.
+
+~~**Request**:~~
 ```http
 PATCH /api/v1/credentials/{id}
 Content-Type: application/json
@@ -183,6 +199,40 @@ X-N8N-API-KEY: <api-key>
   "name": "Gmail Updated Name"
 }
 ```
+
+---
+
+## POST-MORTEM: What Went Wrong
+
+### Root Cause
+The **original specification author (me/Claude)** made incorrect assumptions about n8n API endpoints without verifying against the actual API specification at `C:\Users\Laptop\Desktop\Projects\n8n\docs\n8n_API\n8n_api.json`.
+
+### What Actually Exists
+According to n8n_api.json:
+- ✅ `POST /credentials` - Create credential
+- ✅ `GET /credentials/{id}` - Get single credential metadata
+- ✅ `GET /credentials/schema/{credentialTypeName}` - Get schema
+- ✅ `POST /credentials/{id}/transfer` - Transfer ownership
+- ❌ **NO** `GET /credentials` - List credentials
+- ❌ **NO** `PATCH /credentials/{id}` - Update credential
+- ⚠️ **UNKNOWN** `DELETE /credentials/{id}` - Not in spec but might exist
+
+### Copilot's Performance
+**Copilot did NOTHING wrong**. It:
+1. Read the specification file I created
+2. Implemented exactly what was specified
+3. Added proper TypeScript types and error handling
+4. Wrote clean, maintainable code
+
+The agent performed perfectly - **I wrote bad specifications**.
+
+### Lessons Learned
+1. **ALWAYS verify API endpoints against official documentation**
+2. **Check actual API spec files before writing implementation specs**
+3. **Test endpoints with curl/Postman before specifying them**
+4. **Don't assume API capabilities based on logical expectations**
+
+---
 
 ## Implementation Details
 
