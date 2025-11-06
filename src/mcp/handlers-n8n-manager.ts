@@ -8,7 +8,8 @@ import {
   WebhookRequest,
   McpToolResponse,
   ExecutionFilterOptions,
-  ExecutionMode
+  ExecutionMode,
+  Variable
 } from '../types/n8n-api';
 import {
   validateWorkflowStructure,

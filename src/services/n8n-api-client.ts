@@ -554,32 +554,6 @@ export class N8nApiClient {
     }
   }
 
-  async createVariable(variable: Partial<Variable>): Promise<Variable> {
-    try {
-      const response = await this.client.post('/variables', variable);
-      return response.data;
-    } catch (error) {
-      throw handleN8nApiError(error);
-    }
-  }
-
-  async updateVariable(id: string, variable: Partial<Variable>): Promise<Variable> {
-    try {
-      const response = await this.client.patch(`/variables/${id}`, variable);
-      return response.data;
-    } catch (error) {
-      throw handleN8nApiError(error);
-    }
-  }
-
-  async deleteVariable(id: string): Promise<void> {
-    try {
-      await this.client.delete(`/variables/${id}`);
-    } catch (error) {
-      throw handleN8nApiError(error);
-    }
-  }
-
   /**
    * Validates and normalizes n8n API list responses.
    * Handles both modern format {data: [], nextCursor?: string} and legacy array format.
@@ -592,7 +566,7 @@ export class N8nApiClient {
   private validateListResponse<T>(
     responseData: any,
     resourceType: string
-  ): { data: T[]; nextCursor?: string | null } {
+  ): { data: T[]; nextCursor?: string } {
     // Validate response structure
     if (!responseData || typeof responseData !== 'object') {
       throw new Error(`Invalid response from n8n API for ${resourceType}: response is not an object`);
@@ -605,8 +579,7 @@ export class N8nApiClient {
         'Wrapping in expected format for backwards compatibility.'
       );
       return {
-        data: responseData,
-        nextCursor: null
+        data: responseData
       };
     }
 
