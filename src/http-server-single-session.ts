@@ -1332,12 +1332,13 @@ export class SingleSessionHTTPServer {
         error: 'Not found',
         message: `Cannot ${req.method} ${req.path}`,
         availableEndpoints: [
-          'GET /',
           'GET /health',
           'GET /info',
           'GET /tools',
           'GET /metrics',
-          'POST /mcp'
+          'GET /mcp',
+          'POST /mcp',
+          'DELETE /mcp'
         ]
       });
     });

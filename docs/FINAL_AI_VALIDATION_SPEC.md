@@ -2696,7 +2696,7 @@ function validateMCPClientTool(node: WorkflowNode): ValidationIssue[] {
 }
 ```
 
-✅ **CORRECT - SSE Transport**:
+✅ **CORRECT - HTTP Transport**:
 ```json
 {
   "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
