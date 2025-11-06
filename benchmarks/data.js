@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762372723076,
+  "lastUpdate": 1762402148934,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -54,6 +54,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/fc82c0bef529af8e42fb6b28b584cea3da1e74f4"
         },
         "date": 1762372722827,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": true,
+          "id": "54b380b7e2818f3ed89748e193e68c7dba8ae8cf",
+          "message": "Merge feat/core-features-bundle: Credential management + fixes\n\nFeatures added:\n- Credential management (4 working tools: create, get, schema, delete)\n- Removed non-existent API endpoints (list, update)\n- Fixed integration test configuration to use real n8n API\n- Updated branding and attribution for ArtemisAI fork\n\nAll builds passing, MCP server functional.",
+          "timestamp": "2025-11-05T22:52:20-05:00",
+          "tree_id": "36325c2231b2da8912120e03484989e787d40302",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/54b380b7e2818f3ed89748e193e68c7dba8ae8cf"
+        },
+        "date": 1762402148291,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
