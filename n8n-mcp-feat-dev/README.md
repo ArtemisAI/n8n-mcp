@@ -15,21 +15,24 @@ This directory contains detailed specifications for implementing missing n8n API
 
 | # | Feature | Priority | Complexity | Status | Branch | Notes |
 |---|---------|----------|------------|--------|--------|-------|
-| 001 | Workflow Activation | HIGH | Low | ✅ Complete | `feat/workflow-activation-api` | Merged to main |
-| 002 | Workflow Deactivation | HIGH | Low | ✅ Complete | `feat/workflow-activation-api` | Merged to main |
-| 003 | Retry Execution | HIGH | Low | ✅ Complete | `feat/retry-execution` | Tested 2025-11-05 |
+| 001 | Workflow Activation | HIGH | Low | ✅ Complete | Merged to main | 2025-11-04 |
+| 002 | Workflow Deactivation | HIGH | Low | ✅ Complete | Merged to main | 2025-11-04 |
+| 003 | Retry Execution | HIGH | Low | ✅ Complete | Merged to main | Tested 2025-11-05 |
+| 004 | Credential Management | CRUCIAL | High | ✅ Complete | Merged to main | 4 working tools, 2025-11-06 |
 
 ### 🔨 Pending Implementation
 
 | # | Feature | Priority | Complexity | Est. Hours | Dependencies | Issue |
 |---|---------|----------|------------|------------|--------------|-------|
-| 004 | Credential Management | CRUCIAL ⚠️ | High | 8-12 | Security review | [#2](https://github.com/ArtemisAI/n8n-mcp/issues/2) |
 | 005 | User Management | HIGH ⚡ | Medium | 6-8 | Multi-user instance | [#3](https://github.com/ArtemisAI/n8n-mcp/issues/3) |
 | 006 | Tag Management | MEDIUM 📊 | Low-Medium | 4-6 | None | [#4](https://github.com/ArtemisAI/n8n-mcp/issues/4) |
-| 007 | Variable Management | MEDIUM 📊 | Low | 3-4 | None | [#5](https://github.com/ArtemisAI/n8n-mcp/issues/5) |
-| 008 | Project Management | LOW 📝 | Medium | 6-8 | Enterprise feature | [#6](https://github.com/ArtemisAI/n8n-mcp/issues/6) |
-| 009 | Source Control Pull | LOW 📝 | Low | 2-3 | Git integration | [#7](https://github.com/ArtemisAI/n8n-mcp/issues/7) |
-| 010 | Audit Generation | LOW 📝 | Low | 2-3 | Enterprise feature | [#8](https://github.com/ArtemisAI/n8n-mcp/issues/8) |
+| 009 | Variable Management | MEDIUM 📊 | Low | 3-4 | None | [#5](https://github.com/ArtemisAI/n8n-mcp/issues/5) |
+| 010 | Source Control Pull | LOW 📝 | Low | 2-3 | Git integration | [#7](https://github.com/ArtemisAI/n8n-mcp/issues/7) |
+| 011 | Project Management | LOW 📝 | Medium | 6-8 | Enterprise feature | [#6](https://github.com/ArtemisAI/n8n-mcp/issues/6) |
+
+**Archived Features** (No API Endpoint Available):
+- ~~007: Stop Running Execution~~ - No API endpoint exists for stopping executions
+- ~~008: Execute Workflow Directly~~ - No API endpoint exists for direct workflow execution
 
 **Upstream Tracking**: [czlonkowski/n8n-mcp#401](https://github.com/czlonkowski/n8n-mcp/issues/401) - General feature request for enhanced API coverage
 
@@ -63,30 +66,28 @@ This directory contains detailed specifications for implementing missing n8n API
   - Use case: Environment tagging, team organization, workflow discovery
   - **Issue**: [ArtemisAI/n8n-mcp#4](https://github.com/ArtemisAI/n8n-mcp/issues/4)
 
-- **007-variable-management.md** - Environment variable management (TODO)
+- **009-variable-management.md** - Environment variable management
   - API: `/variables`, `/variables/{id}`
   - Tools: `n8n_create_variable`, `n8n_list_variables`, etc.
   - Use case: Configuration management, environment-specific settings
   - **Issue**: [ArtemisAI/n8n-mcp#5](https://github.com/ArtemisAI/n8n-mcp/issues/5)
 
 ### Enterprise Features
-- **008-project-management.md** - Project and workspace management (TODO)
-  - API: `/projects`, `/projects/{id}`, `/projects/{id}/users`
-  - Tools: `n8n_create_project`, `n8n_add_project_user`, etc.
-  - Use case: Multi-tenant deployments, team isolation
-  - **Issue**: [ArtemisAI/n8n-mcp#6](https://github.com/ArtemisAI/n8n-mcp/issues/6)
-
-- **009-source-control.md** - Git source control integration (TODO)
+- **010-source-control.md** - Git source control integration
   - API: `/source-control/pull`
   - Tools: `n8n_pull_from_source_control`
   - Use case: GitOps workflows, version control integration
   - **Issue**: [ArtemisAI/n8n-mcp#7](https://github.com/ArtemisAI/n8n-mcp/issues/7)
 
-- **010-audit-generation.md** - Security audit generation (TODO)
-  - API: `/audit`
-  - Tools: `n8n_generate_audit`
-  - Use case: Security compliance, audit trails
-  - **Issue**: [ArtemisAI/n8n-mcp#8](https://github.com/ArtemisAI/n8n-mcp/issues/8)
+- **011-project-management.md** - Project and workspace management
+  - API: `/projects`, `/projects/{id}`, `/projects/{id}/users`
+  - Tools: `n8n_create_project`, `n8n_add_project_user`, etc.
+  - Use case: Multi-tenant deployments, team isolation
+  - **Issue**: [ArtemisAI/n8n-mcp#6](https://github.com/ArtemisAI/n8n-mcp/issues/6)
+
+### Archived Features (No API Endpoint Available)
+- ~~007-stop-running-execution.md~~ - No endpoint exists for stopping running executions
+- ~~008-execute-workflow-directly.md~~ - No endpoint exists for direct workflow execution
 
 ## Development Workflow
 
@@ -127,11 +128,11 @@ We're working as **collaborators** on the n8n-mcp project, implementing features
    - Create postmortem document (NNN-feature-name.md)
    - Share learnings with community
 
-### Current Implementation: Tag Management (#006)
+### Current Implementation: User Management (#005)
 - **Target**: Complete features 004-006 before upstream PR
-- **Branch Strategy**: Individual feature branches, merge to fork main
+- **Branch Strategy**: Work on feat/next-features, merge to main when complete
 - **PR Strategy**: Single comprehensive PR with all completed features
-- **Status**: 3/6 core features complete (50%)
+- **Status**: 4/6 core features complete (67%)
 
 ## Upstream Contribution Strategy
 

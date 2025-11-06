@@ -628,5 +628,97 @@ Examples:
       },
       required: ['credentialTypeName']
     }
+  },
+
+  // Tag Management Tools
+  {
+    name: 'n8n_create_tag',
+    description: 'Create a new tag for organizing workflows.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Tag name (must be unique)',
+        },
+      },
+      required: ['name'],
+    },
+  },
+  {
+    name: 'n8n_list_tags',
+    description: 'List all available tags with workflow counts.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: 'n8n_get_tag',
+    description: 'Get details about a specific tag including workflows using it.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Tag ID',
+        },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'n8n_update_tag',
+    description: 'Update tag name. Changes apply to all workflows using this tag.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Tag ID',
+        },
+        name: {
+          type: 'string',
+          description: 'New tag name',
+        },
+      },
+      required: ['id', 'name'],
+    },
+  },
+  {
+    name: 'n8n_delete_tag',
+    description: 'Delete a tag. Removes tag from all workflows but does not delete the workflows.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Tag ID to delete',
+        },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'n8n_update_workflow_tags',
+    description: 'Set tags for a workflow. Replaces all existing tags with the provided list.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflowId: {
+          type: 'string',
+          description: 'Workflow ID',
+        },
+        tagIds: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          description: 'Array of tag IDs to assign to the workflow. Pass empty array to remove all tags.',
+        },
+      },
+      required: ['workflowId', 'tagIds'],
+    },
   }
 ];
