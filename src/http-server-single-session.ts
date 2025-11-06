@@ -1216,11 +1216,216 @@ export class SingleSessionHTTPServer {
       });
     });
     
+    // Network discovery endpoints (no auth required)
+    
+    // Service info endpoint - provides metadata about the MCP server
+    app.get('/info', (req, res) => {
+      const port = parseInt(process.env.PORT || '3000');
+      const host = process.env.HOST || '0.0.0.0';
+      const baseUrl = detectBaseUrl(req, host, port);
+      
+      res.json({
+        service: 'n8n-MCP-Server',
+        version: PROJECT_VERSION,
+        description: 'MCP server for n8n documentation, node management, and workflow automation',
+        baseUrl,
+        protocols: {
+          transport: 'HTTP Streamable',
+          format: 'JSON-RPC 2.0',
+          specification: 'Model Context Protocol'
+        },
+        endpoints: {
+          health: `${baseUrl}/health`,
+          info: `${baseUrl}/info`,
+          tools: `${baseUrl}/tools`,
+          metrics: `${baseUrl}/metrics`,
+          mcp: `${baseUrl}/mcp`
+        },
+        authentication: {
+          required: true,
+          method: 'Bearer Token',
+          header: 'Authorization: Bearer <token>',
+          example: 'Authorization: Bearer your-secure-token-123'
+        },
+        network: {
+          listeningOn: host === '0.0.0.0' ? 'All interfaces (0.0.0.0)' : host,
+          port,
+          accessibleFrom: host === '0.0.0.0' ? 'Any network address' : host,
+          mode: 'Multi-client HTTP Server'
+        },
+        capabilities: {
+          multiSession: true,
+          maxSessions: MAX_SESSIONS,
+          sessionTimeout: `${this.sessionTimeout / 1000 / 60} minutes`,
+          rateLimiting: true,
+          corsEnabled: true
+        },
+        documentation: 'https://github.com/czlonkowski/n8n-mcp',
+        timestamp: new Date().toISOString()
+      });
+    });
+
+    // Tools discovery endpoint - lists available MCP tools
+    app.get('/tools', (req, res) => {
+      const port = parseInt(process.env.PORT || '3000');
+      const host = process.env.HOST || '0.0.0.0';
+      const baseUrl = detectBaseUrl(req, host, port);
+      
+      res.json({
+        tools: [
+          {
+            name: 'tools_documentation',
+            description: 'Get comprehensive documentation for all available n8n tools'
+          },
+          {
+            name: 'list_nodes',
+            description: 'List all available n8n nodes'
+          },
+          {
+            name: 'get_node_info',
+            description: 'Get detailed information about a specific node'
+          },
+          {
+            name: 'search_nodes',
+            description: 'Search for nodes by name or category'
+          },
+          {
+            name: 'get_node_essentials',
+            description: 'Get essential configuration for a node'
+          },
+          {
+            name: 'validate_node_config',
+            description: 'Validate node configuration parameters'
+          },
+          {
+            name: 'n8n_activate_workflow',
+            description: 'Activate an n8n workflow'
+          },
+          {
+            name: 'n8n_deactivate_workflow',
+            description: 'Deactivate an n8n workflow'
+          },
+          {
+            name: 'n8n_retry_execution',
+            description: 'Retry a failed workflow execution'
+          },
+          {
+            name: 'n8n_create_credential',
+            description: 'Create a new n8n credential'
+          },
+          {
+            name: 'n8n_get_credential',
+            description: 'Get credential information'
+          },
+          {
+            name: 'n8n_delete_credential',
+            description: 'Delete an n8n credential'
+          },
+          {
+            name: 'n8n_create_tag',
+            description: 'Create a new tag for organizing workflows'
+          },
+          {
+            name: 'n8n_list_tags',
+            description: 'List all available tags'
+          },
+          {
+            name: 'n8n_get_tag',
+            description: 'Get tag information'
+          },
+          {
+            name: 'n8n_update_tag',
+            description: 'Update an existing tag'
+          },
+          {
+            name: 'n8n_delete_tag',
+            description: 'Delete a tag'
+          },
+          {
+            name: 'n8n_create_variable',
+            description: 'Create an n8n environment variable'
+          },
+          {
+            name: 'n8n_list_variables',
+            description: 'List all environment variables'
+          },
+          {
+            name: 'n8n_get_variable',
+            description: 'Get a specific variable'
+          },
+          {
+            name: 'n8n_update_variable',
+            description: 'Update an environment variable'
+          },
+          {
+            name: 'n8n_delete_variable',
+            description: 'Delete an environment variable'
+          }
+        ],
+        count: 21,
+        usage: 'Call tools via POST /mcp with JSON-RPC format',
+        authentication: 'Required - Bearer token in Authorization header',
+        documentation: `${baseUrl}/info`,
+        timestamp: new Date().toISOString()
+      });
+    });
+
+    // Metrics endpoint - provides usage statistics (requires auth)
+    app.get('/metrics', (req, res) => {
+      const authHeader = req.headers.authorization;
+      const tokenRequired = process.env.NODE_ENV === 'production';
+      
+      if (tokenRequired && !authHeader) {
+        res.status(401).json({
+          error: 'Unauthorized',
+          message: 'Bearer token required for metrics in production'
+        });
+        return;
+      }
+      
+      const sessionMetrics = this.getSessionMetrics();
+      
+      res.json({
+        timestamp: new Date().toISOString(),
+        sessions: {
+          active: sessionMetrics.activeSessions,
+          total: sessionMetrics.totalSessions,
+          expired: sessionMetrics.expiredSessions,
+          maxAllowed: MAX_SESSIONS,
+          usagePercent: (sessionMetrics.activeSessions / MAX_SESSIONS * 100).toFixed(2)
+        },
+        uptime: {
+          seconds: Math.floor(process.uptime()),
+          formatted: `${Math.floor(process.uptime() / 3600)}h ${Math.floor((process.uptime() % 3600) / 60)}m`
+        },
+        memory: {
+          heapUsed: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB`,
+          heapTotal: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)} MB`,
+          external: `${Math.round(process.memoryUsage().external / 1024 / 1024)} MB`,
+          rss: `${Math.round(process.memoryUsage().rss / 1024 / 1024)} MB`
+        },
+        performance: {
+          sessionTimeout: `${this.sessionTimeout / 1000 / 60} minutes`,
+          lastCleanup: sessionMetrics.lastCleanup.toISOString(),
+          cleanupInterval: `${SESSION_CLEANUP_INTERVAL / 1000 / 60} minutes`
+        }
+      });
+    });
+    
     // 404 handler
     app.use((req, res) => {
       res.status(404).json({ 
         error: 'Not found',
-        message: `Cannot ${req.method} ${req.path}`
+        message: `Cannot ${req.method} ${req.path}`,
+        availableEndpoints: [
+          'GET /',
+          'GET /health',
+          'GET /info',
+          'GET /tools',
+          'GET /metrics',
+          'GET /mcp (SSE)',
+          'POST /mcp'
+        ]
       });
     });
     
