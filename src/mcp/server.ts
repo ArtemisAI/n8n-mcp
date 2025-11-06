@@ -720,7 +720,6 @@ export class N8NDocumentationMCPServer {
       case 'n8n_retry_execution':
       case 'n8n_get_credential':
       case 'n8n_delete_credential':
-      case 'n8n_update_credential':
         validationResult = ToolValidation.validateWorkflowId(args);
         break;
       default:
@@ -1069,18 +1068,12 @@ export class N8NDocumentationMCPServer {
       case 'n8n_get_credential':
         this.validateToolParams(name, args, ['id']);
         return n8nHandlers.handleGetCredential(args, this.instanceContext);
-      case 'n8n_list_credentials':
-        // No required parameters
-        return n8nHandlers.handleListCredentials(args, this.instanceContext);
       case 'n8n_delete_credential':
         this.validateToolParams(name, args, ['id']);
         return n8nHandlers.handleDeleteCredential(args, this.instanceContext);
       case 'n8n_get_credential_schema':
         this.validateToolParams(name, args, ['credentialTypeName']);
         return n8nHandlers.handleGetCredentialSchema(args, this.instanceContext);
-      case 'n8n_update_credential':
-        this.validateToolParams(name, args, ['id', 'name']);
-        return n8nHandlers.handleUpdateCredential(args, this.instanceContext);
       
       case 'n8n_health_check':
         // No required parameters

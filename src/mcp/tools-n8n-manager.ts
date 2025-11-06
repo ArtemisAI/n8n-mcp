@@ -602,19 +602,6 @@ Examples:
     }
   },
   {
-    name: 'n8n_list_credentials',
-    description: `List all credentials (metadata only). Returns id, name, type for each credential. No sensitive data included.`,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        type: {
-          type: 'string',
-          description: 'Optional: Filter by credential type (e.g., "httpBasicAuth")'
-        }
-      }
-    }
-  },
-  {
     name: 'n8n_delete_credential',
     description: `Delete a credential. WARNING: This will break workflows using this credential. Use with caution.`,
     inputSchema: {
@@ -640,24 +627,6 @@ Examples:
         }
       },
       required: ['credentialTypeName']
-    }
-  },
-  {
-    name: 'n8n_update_credential',
-    description: `Update credential metadata (currently only name can be updated). Cannot update credential data for security reasons.`,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'string',
-          description: 'Credential ID'
-        },
-        name: {
-          type: 'string',
-          description: 'New credential name'
-        }
-      },
-      required: ['id', 'name']
     }
   }
 ];
