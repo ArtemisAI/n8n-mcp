@@ -720,5 +720,105 @@ Examples:
       },
       required: ['workflowId', 'tagIds'],
     },
+  },
+
+  // Variable Management Tools
+  {
+    name: 'n8n_create_variable',
+    description: 'Create a new variable in your n8n instance. Variables store reusable data across workflows.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        key: {
+          type: 'string',
+          description: 'Variable key/name (must be unique)',
+        },
+        value: {
+          type: 'string',
+          description: 'Variable value',
+        },
+        projectId: {
+          type: 'string',
+          description: 'Optional project ID (enterprise feature)',
+        },
+      },
+      required: ['key', 'value'],
+    },
+  },
+  {
+    name: 'n8n_list_variables',
+    description: 'List all variables with optional filtering. Supports pagination for large sets.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        limit: {
+          type: 'number',
+          description: 'Number of variables to return (1-100, default: 100)',
+        },
+        cursor: {
+          type: 'string',
+          description: 'Pagination cursor from previous response',
+        },
+        projectId: {
+          type: 'string',
+          description: 'Filter by project ID (enterprise feature)',
+        },
+        state: {
+          type: 'string',
+          enum: ['active', 'inactive'],
+          description: 'Filter by state',
+        },
+      },
+    },
+  },
+  {
+    name: 'n8n_get_variable',
+    description: 'Get a specific variable by ID. Returns key, value, and metadata.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Variable ID',
+        },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'n8n_update_variable',
+    description: 'Update a variable\'s key and/or value. Workflows using this variable will use the updated value.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Variable ID to update',
+        },
+        key: {
+          type: 'string',
+          description: 'New variable key (optional)',
+        },
+        value: {
+          type: 'string',
+          description: 'New variable value (optional)',
+        },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'n8n_delete_variable',
+    description: 'Delete a variable. WARNING: Workflows using this variable may fail if not updated.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Variable ID to delete',
+        },
+      },
+      required: ['id'],
+    },
   }
 ];

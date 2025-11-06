@@ -1109,6 +1109,23 @@ export class N8NDocumentationMCPServer {
         this.validateToolParams(name, args, ['workflowId', 'tagIds']);
         return n8nHandlers.handleUpdateWorkflowTags(args, this.instanceContext);
       
+      // Variable Management
+      case 'n8n_create_variable':
+        this.validateToolParams(name, args, ['key', 'value']);
+        return n8nHandlers.handleCreateVariable(args, this.instanceContext);
+      case 'n8n_list_variables':
+        // No required parameters
+        return n8nHandlers.handleListVariables(args, this.instanceContext);
+      case 'n8n_get_variable':
+        this.validateToolParams(name, args, ['id']);
+        return n8nHandlers.handleGetVariable(args, this.instanceContext);
+      case 'n8n_update_variable':
+        this.validateToolParams(name, args, ['id']);
+        return n8nHandlers.handleUpdateVariable(args, this.instanceContext);
+      case 'n8n_delete_variable':
+        this.validateToolParams(name, args, ['id']);
+        return n8nHandlers.handleDeleteVariable(args, this.instanceContext);
+      
       case 'n8n_health_check':
         // No required parameters
         return n8nHandlers.handleHealthCheck(this.instanceContext);

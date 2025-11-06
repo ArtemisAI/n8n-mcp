@@ -150,6 +150,19 @@ export interface Variable {
   key: string;
   value: string;
   type?: 'string';
+  projectId?: string;
+}
+
+export interface VariableListParams {
+  limit?: number;
+  cursor?: string;
+  projectId?: string;
+  state?: 'active' | 'inactive';
+}
+
+export interface VariableListResponse {
+  data: Variable[];
+  nextCursor?: string;
 }
 
 // Import/Export Types

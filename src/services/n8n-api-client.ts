@@ -14,6 +14,8 @@ import {
   TagListResponse,
   HealthCheckResponse,
   Variable,
+  VariableListParams,
+  VariableListResponse,
   WebhookRequest,
   WorkflowExport,
   WorkflowImport,
@@ -426,6 +428,81 @@ export class N8nApiClient {
         { tags: tagIds }
       );
       return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  // Variable Management
+  /**
+   * Lists variables from n8n instance.
+   *
+   * @param params - Query parameters for filtering and pagination
+   * @returns Paginated list of variables
+   */
+  async listVariables(params: VariableListParams = {}): Promise<VariableListResponse> {
+    try {
+      const response = await this.client.get('/variables', { params });
+      return this.validateListResponse<Variable>(response.data, 'variables');
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  /**
+   * Create a new variable.
+   *
+   * @param variable - Variable data (key, value, optional projectId)
+   * @returns Created variable with id
+   */
+  async createVariable(variable: Partial<Variable>): Promise<Variable> {
+    try {
+      const response = await this.client.post('/variables', variable);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  /**
+   * Get a variable by ID.
+   *
+   * @param id - Variable ID
+   * @returns Variable details
+   */
+  async getVariable(id: string): Promise<Variable> {
+    try {
+      const response = await this.client.get(`/variables/${id}`);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  /**
+   * Update a variable.
+   *
+   * @param id - Variable ID
+   * @param variable - Updated variable data (key and/or value)
+   * @returns Updated variable
+   */
+  async updateVariable(id: string, variable: Partial<Variable>): Promise<Variable> {
+    try {
+      const response = await this.client.put(`/variables/${id}`, variable);
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  /**
+   * Delete a variable.
+   *
+   * @param id - Variable ID
+   */
+  async deleteVariable(id: string): Promise<void> {
+    try {
+      await this.client.delete(`/variables/${id}`);
     } catch (error) {
       throw handleN8nApiError(error);
     }

@@ -2608,3 +2608,261 @@ export async function handleUpdateWorkflowTags(args: unknown, context?: Instance
     };
   }
 }
+
+// ========================================================================
+// Variable Management Handlers
+// ========================================================================
+
+/**
+ * Handle create variable request
+ */
+export async function handleCreateVariable(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      key: z.string().min(1, 'Variable key is required'),
+      value: z.string(),
+      projectId: z.string().optional()
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    const variable = await client.createVariable(validatedArgs);
+    
+    return {
+      success: true,
+      data: variable,
+      message: `Variable "${variable.key}" created successfully. ID: ${variable.id}`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+/**
+ * Handle list variables request
+ */
+export async function handleListVariables(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      limit: z.number().min(1).max(100).optional(),
+      cursor: z.string().optional(),
+      projectId: z.string().optional(),
+      state: z.enum(['active', 'inactive']).optional()
+    });
+
+    const validatedArgs = schema.parse(args || {});
+    const client = ensureApiConfigured(context);
+    
+    const response = await client.listVariables({
+      limit: validatedArgs.limit || 100,
+      cursor: validatedArgs.cursor,
+      projectId: validatedArgs.projectId,
+      state: validatedArgs.state
+    });
+    
+    return {
+      success: true,
+      data: {
+        variables: response.data,
+        returned: response.data.length,
+        nextCursor: response.nextCursor,
+        hasMore: !!response.nextCursor,
+        ...(response.nextCursor ? { 
+          _note: "More variables available. Use cursor to get next page." 
+        } : {})
+      }
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+/**
+ * Handle get variable request
+ */
+export async function handleGetVariable(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Variable ID is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    const variable = await client.getVariable(validatedArgs.id);
+    
+    return {
+      success: true,
+      data: variable,
+      message: `Retrieved variable "${variable.key}"`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+/**
+ * Handle update variable request
+ */
+export async function handleUpdateVariable(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Variable ID is required'),
+      key: z.string().optional(),
+      value: z.string().optional()
+    });
+
+    const validatedArgs = schema.parse(args);
+    
+    // At least one field must be provided for update
+    if (!validatedArgs.key && !validatedArgs.value) {
+      return {
+        success: false,
+        error: 'At least one of key or value must be provided for update'
+      };
+    }
+
+    const client = ensureApiConfigured(context);
+    
+    const updateData: Partial<Variable> = {};
+    if (validatedArgs.key) updateData.key = validatedArgs.key;
+    if (validatedArgs.value) updateData.value = validatedArgs.value;
+    
+    const variable = await client.updateVariable(validatedArgs.id, updateData);
+    
+    return {
+      success: true,
+      data: variable,
+      message: `Variable "${variable.key}" updated successfully`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
+
+/**
+ * Handle delete variable request
+ */
+export async function handleDeleteVariable(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
+  try {
+    const schema = z.object({
+      id: z.string().min(1, 'Variable ID is required')
+    });
+
+    const validatedArgs = schema.parse(args);
+    const client = ensureApiConfigured(context);
+    
+    // Get variable details before deletion for better messaging
+    const variable = await client.getVariable(validatedArgs.id);
+    
+    await client.deleteVariable(validatedArgs.id);
+    
+    return {
+      success: true,
+      data: {
+        id: validatedArgs.id,
+        key: variable.key,
+        deleted: true
+      },
+      message: `Variable "${variable.key}" deleted successfully. WARNING: Workflows using this variable may fail.`
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Invalid input',
+        details: { errors: error.errors }
+      };
+    }
+    
+    if (error instanceof N8nApiError) {
+      return {
+        success: false,
+        error: getUserFriendlyErrorMessage(error),
+        code: error.code
+      };
+    }
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
