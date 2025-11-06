@@ -1021,6 +1021,16 @@ describe('N8nApiClient', () => {
       expect(result).toEqual(created);
     });
 
+    it('should get tag', async () => {
+      const tag = { id: '123', name: 'Test Tag', workflowCount: 5 };
+      mockAxiosInstance.get.mockResolvedValue({ data: tag });
+      
+      const result = await client.getTag('123');
+      
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/tags/123');
+      expect(result).toEqual(tag);
+    });
+
     it('should update tag', async () => {
       const updates = { name: 'Updated Tag' };
       const updated = { id: '123', ...updates };
@@ -1038,6 +1048,27 @@ describe('N8nApiClient', () => {
       await client.deleteTag('123');
       
       expect(mockAxiosInstance.delete).toHaveBeenCalledWith('/tags/123');
+    });
+
+    it('should update workflow tags', async () => {
+      const workflowId = 'wf-123';
+      const tagIds = ['tag-1', 'tag-2'];
+      const response = {
+        id: workflowId,
+        tags: [
+          { id: 'tag-1', name: 'production' },
+          { id: 'tag-2', name: 'api' }
+        ]
+      };
+      mockAxiosInstance.put.mockResolvedValue({ data: response });
+      
+      const result = await client.updateWorkflowTags(workflowId, tagIds);
+      
+      expect(mockAxiosInstance.put).toHaveBeenCalledWith(
+        `/workflows/${workflowId}/tags`,
+        { tags: tagIds }
+      );
+      expect(result).toEqual(response);
     });
   });
 
