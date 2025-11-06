@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762443692449,
+  "lastUpdate": 1762446409017,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -178,6 +178,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/3291ae8fcc749929baf7e2ed982f08b71d5d97e0"
         },
         "date": 1762443692167,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": true,
+          "id": "8f978023c988d5aa13212c68e22382d851c8126f",
+          "message": "chore: cleanup repository - remove development docs and update gitignore",
+          "timestamp": "2025-11-06T11:24:42-05:00",
+          "tree_id": "1c9d2764673636d3d5414086d561928b70c05cee",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/8f978023c988d5aa13212c68e22382d851c8126f"
+        },
+        "date": 1762446408367,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
