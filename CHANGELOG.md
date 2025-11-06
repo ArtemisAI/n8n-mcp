@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Features
+
+#### Variable Management Tools (NEW!)
+
+Added comprehensive variable management capabilities to n8n-mcp, enabling programmatic control of n8n variables through the MCP interface.
+
+**New Tools:**
+- `n8n_create_variable` - Create new variables for storing reusable data
+- `n8n_list_variables` - List all variables with pagination and filtering
+- `n8n_get_variable` - Get a specific variable by ID
+- `n8n_update_variable` - Update variable key and/or value
+- `n8n_delete_variable` - Delete a variable from the instance
+
+**Features:**
+- Full CRUD operations for n8n variables
+- Pagination support for large variable sets
+- Project-based filtering (Enterprise feature)
+- State-based filtering (active/inactive)
+- Comprehensive error handling and validation
+- Warning messages for destructive operations
+
+**Implementation:**
+- Added `VariableListParams` and `VariableListResponse` types
+- Implemented 5 new API client methods in `n8n-api-client.ts`
+- Added tool definitions with JSON schemas in `tools-n8n-manager.ts`
+- Implemented handlers with Zod validation in `handlers-n8n-manager.ts`
+- Wired up handlers in MCP server with parameter validation
+- Added comprehensive unit and integration tests
+- Created `VARIABLE_QUICK_REFERENCE.md` documentation
+
+**Testing:**
+- 25+ unit tests covering validation, error handling, and response formatting
+- 15+ integration tests covering full CRUD operations against real n8n API
+- Tests follow established patterns from Tag and Credential management
+
+**Documentation:**
+- Updated README.md with new tools section
+- Created comprehensive quick reference guide
+- Included common patterns, best practices, and troubleshooting
+
+Conceived by Romuald Członkowski - [www.aiadvisors.pl/en](https://www.aiadvisors.pl/en)
+
+---
+
 ### 🔧 Project Branding & Attribution Updates
 
 **ArtemisAI Fork Branding Implementation**

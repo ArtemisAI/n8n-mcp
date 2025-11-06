@@ -1000,6 +1000,13 @@ These powerful tools allow you to manage n8n workflows directly from Claude. The
 - **`n8n_delete_tag`** - Delete a tag (removes from all workflows)
 - **`n8n_update_workflow_tags`** - Set tags for a workflow (replaces existing tags)
 
+#### Variable Management (NEW!)
+- **`n8n_create_variable`** - Create new variables for storing reusable data
+- **`n8n_list_variables`** - List all variables with pagination support
+- **`n8n_get_variable`** - Get a specific variable by ID
+- **`n8n_update_variable`** - Update variable key and/or value
+- **`n8n_delete_variable`** - Delete a variable (workflows using it may fail)
+
 #### System Tools
 - **`n8n_health_check`** - Check n8n API connectivity and features
 - **`n8n_diagnostic`** - Troubleshoot management tools visibility and configuration issues
