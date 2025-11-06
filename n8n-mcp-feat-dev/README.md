@@ -15,15 +15,15 @@ This directory contains detailed specifications for implementing missing n8n API
 
 | # | Feature | Priority | Complexity | Status | Branch | Notes |
 |---|---------|----------|------------|--------|--------|-------|
-| 001 | Workflow Activation | HIGH | Low | ✅ Complete | `feat/workflow-activation-api` | Merged to main |
-| 002 | Workflow Deactivation | HIGH | Low | ✅ Complete | `feat/workflow-activation-api` | Merged to main |
-| 003 | Retry Execution | HIGH | Low | ✅ Complete | `feat/retry-execution` | Tested 2025-11-05 |
+| 001 | Workflow Activation | HIGH | Low | ✅ Complete | Merged to main | 2025-11-04 |
+| 002 | Workflow Deactivation | HIGH | Low | ✅ Complete | Merged to main | 2025-11-04 |
+| 003 | Retry Execution | HIGH | Low | ✅ Complete | Merged to main | Tested 2025-11-05 |
+| 004 | Credential Management | CRUCIAL | High | ✅ Complete | Merged to main | 4 working tools, 2025-11-06 |
 
 ### 🔨 Pending Implementation
 
 | # | Feature | Priority | Complexity | Est. Hours | Dependencies | Issue |
 |---|---------|----------|------------|------------|--------------|-------|
-| 004 | Credential Management | CRUCIAL ⚠️ | High | 8-12 | Security review | [#2](https://github.com/ArtemisAI/n8n-mcp/issues/2) |
 | 005 | User Management | HIGH ⚡ | Medium | 6-8 | Multi-user instance | [#3](https://github.com/ArtemisAI/n8n-mcp/issues/3) |
 | 006 | Tag Management | MEDIUM 📊 | Low-Medium | 4-6 | None | [#4](https://github.com/ArtemisAI/n8n-mcp/issues/4) |
 | 007 | Variable Management | MEDIUM 📊 | Low | 3-4 | None | [#5](https://github.com/ArtemisAI/n8n-mcp/issues/5) |
@@ -127,11 +127,11 @@ We're working as **collaborators** on the n8n-mcp project, implementing features
    - Create postmortem document (NNN-feature-name.md)
    - Share learnings with community
 
-### Current Implementation: Tag Management (#006)
+### Current Implementation: User Management (#005)
 - **Target**: Complete features 004-006 before upstream PR
-- **Branch Strategy**: Individual feature branches, merge to fork main
+- **Branch Strategy**: Work on feat/next-features, merge to main when complete
 - **PR Strategy**: Single comprehensive PR with all completed features
-- **Status**: 3/6 core features complete (50%)
+- **Status**: 4/6 core features complete (67%)
 
 ## Upstream Contribution Strategy
 
