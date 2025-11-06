@@ -1595,37 +1595,6 @@ export async function handleGetCredential(args: unknown, context?: InstanceConte
 }
 
 /**
- * Handle list credentials request
- */
-export async function handleListCredentials(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
-  try {
-    const schema = z.object({
-      type: z.string().optional()
-    });
-
-    const validatedArgs = schema.parse(args);
-    const client = ensureApiConfigured(context);
-    
-    const params = validatedArgs.type ? { filter: { type: validatedArgs.type } } : undefined;
-    const result = await client.listCredentials(params);
-    
-    return {
-      success: true,
-      data: {
-        credentials: result.data,
-        count: result.data.length
-      },
-      message: `Found ${result.data.length} credential${result.data.length !== 1 ? 's' : ''}${validatedArgs.type ? ` of type "${validatedArgs.type}"` : ''}`
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
-    };
-  }
-}
-
-/**
  * Handle delete credential request
  */
 export async function handleDeleteCredential(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
@@ -1677,37 +1646,6 @@ export async function handleGetCredentialSchema(args: unknown, context?: Instanc
       success: true,
       data: credentialSchema,
       message: `Retrieved schema for credential type "${credentialSchema.displayName}"`
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
-    };
-  }
-}
-
-/**
- * Handle update credential request
- */
-export async function handleUpdateCredential(args: unknown, context?: InstanceContext): Promise<McpToolResponse> {
-  try {
-    const schema = z.object({
-      id: z.string().min(1, 'Credential ID is required'),
-      name: z.string().min(1, 'New credential name is required')
-    });
-
-    const validatedArgs = schema.parse(args);
-    const client = ensureApiConfigured(context);
-    
-    const credential = await client.updateCredential(
-      validatedArgs.id,
-      { name: validatedArgs.name }
-    );
-    
-    return {
-      success: true,
-      data: credential,
-      message: `Credential renamed to "${credential.name}"`
     };
   } catch (error) {
     return {

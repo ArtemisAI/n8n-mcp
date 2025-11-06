@@ -265,17 +265,6 @@ export interface ExecutionListResponse {
   nextCursor?: string | null;
 }
 
-export interface CredentialListParams {
-  limit?: number;
-  cursor?: string;
-  filter?: Record<string, unknown>;
-}
-
-export interface CredentialListResponse {
-  data: Credential[];
-  nextCursor?: string | null;
-}
-
 export interface TagListParams {
   limit?: number;
   cursor?: string;
