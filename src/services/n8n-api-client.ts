@@ -8,8 +8,7 @@ import {
   ExecutionListParams,
   ExecutionListResponse,
   Credential,
-  CredentialListParams,
-  CredentialListResponse,
+  CredentialSchema,
   Tag,
   TagListParams,
   TagListResponse,
@@ -252,6 +251,17 @@ export class N8nApiClient {
     }
   }
 
+  async retryExecution(id: string, loadWorkflow: boolean = true): Promise<Execution> {
+    try {
+      const response = await this.client.post(`/executions/${id}/retry`, {
+        loadWorkflow
+      });
+      return response.data;
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
   // Webhook Execution
   async triggerWebhook(request: WebhookRequest): Promise<any> {
     try {
@@ -305,28 +315,6 @@ export class N8nApiClient {
   }
 
   // Credential Management
-  /**
-   * Lists credentials from n8n instance.
-   *
-   * @param params - Query parameters for filtering and pagination
-   * @returns Paginated list of credentials
-   *
-   * @remarks
-   * This method handles two response formats for backwards compatibility:
-   * - Modern (n8n v0.200.0+): {data: Credential[], nextCursor?: string}
-   * - Legacy (older versions): Credential[] (wrapped automatically)
-   *
-   * @see https://github.com/czlonkowski/n8n-mcp/issues/349
-   */
-  async listCredentials(params: CredentialListParams = {}): Promise<CredentialListResponse> {
-    try {
-      const response = await this.client.get('/credentials', { params });
-      return this.validateListResponse<Credential>(response.data, 'credentials');
-    } catch (error) {
-      throw handleN8nApiError(error);
-    }
-  }
-
   async getCredential(id: string): Promise<Credential> {
     try {
       const response = await this.client.get(`/credentials/${id}`);
@@ -345,18 +333,26 @@ export class N8nApiClient {
     }
   }
 
-  async updateCredential(id: string, credential: Partial<Credential>): Promise<Credential> {
+  async deleteCredential(id: string): Promise<void> {
     try {
-      const response = await this.client.patch(`/credentials/${id}`, credential);
-      return response.data;
+      await this.client.delete(`/credentials/${id}`);
     } catch (error) {
       throw handleN8nApiError(error);
     }
   }
 
-  async deleteCredential(id: string): Promise<void> {
+  /**
+   * Get credential type schema for dynamic form building
+   * 
+   * @param credentialTypeName - The credential type (e.g., 'httpBasicAuth', 'gmailOAuth2Api')
+   * @returns Credential schema with field definitions
+   */
+  async getCredentialSchema(credentialTypeName: string): Promise<CredentialSchema> {
     try {
-      await this.client.delete(`/credentials/${id}`);
+      const response = await this.client.get<CredentialSchema>(
+        `/credentials/schema/${credentialTypeName}`
+      );
+      return response.data;
     } catch (error) {
       throw handleN8nApiError(error);
     }

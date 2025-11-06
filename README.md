@@ -1,12 +1,12 @@
 # n8n-MCP
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/czlonkowski/n8n-mcp?style=social)](https://github.com/czlonkowski/n8n-mcp)
+[![GitHub stars](https://img.shields.io/github/stars/ArtemisAI/n8n-mcp?style=social)](https://github.com/ArtemisAI/n8n-mcp)
 [![npm version](https://img.shields.io/npm/v/n8n-mcp.svg)](https://www.npmjs.com/package/n8n-mcp)
 [![codecov](https://codecov.io/gh/czlonkowski/n8n-mcp/graph/badge.svg?token=YOUR_TOKEN)](https://codecov.io/gh/czlonkowski/n8n-mcp)
 [![Tests](https://img.shields.io/badge/tests-3336%20passing-brightgreen.svg)](https://github.com/czlonkowski/n8n-mcp/actions)
 [![n8n version](https://img.shields.io/badge/n8n-1.118.1-orange.svg)](https://github.com/n8n-io/n8n)
-[![Docker](https://img.shields.io/badge/docker-ghcr.io%2Fczlonkowski%2Fn8n--mcp-green.svg)](https://github.com/czlonkowski/n8n-mcp/pkgs/container/n8n-mcp)
+[![Docker](https://img.shields.io/badge/docker-ghcr.io%2FArtemisAI%2Fn8n--mcp-green.svg)](https://github.com/ArtemisAI/n8n-mcp/pkgs/container/n8n-mcp)
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/n8n-mcp?referralCode=n8n-mcp)
 
 A Model Context Protocol (MCP) server that provides AI assistants with comprehensive access to n8n node documentation, properties, and operations. Deploy in minutes to give Claude and other AI assistants deep knowledge about n8n's 541 workflow automation nodes.
@@ -989,6 +989,7 @@ These powerful tools allow you to manage n8n workflows directly from Claude. The
 - **`n8n_trigger_webhook_workflow`** - Trigger workflows via webhook URL
 - **`n8n_get_execution`** - Get execution details by ID
 - **`n8n_list_executions`** - List executions with status filtering
+- **`n8n_retry_execution`** - Retry failed executions with same input data (NEW in v2.22.10!)
 - **`n8n_delete_execution`** - Delete execution records
 
 #### System Tools
@@ -1269,5 +1270,13 @@ Special thanks to the prolific template contributors whose work helps thousands 
 
 <div align="center">
   <strong>Built with ❤️ for the n8n community</strong><br>
-  <sub>Making AI + n8n workflow creation delightful</sub>
+  <sub>Making AI + n8n workflow creation delightful</sub><br><br>
+
+  ## 🤝 Attribution & Credits
+
+  **Original Author**: [Romuald Członkowski](https://www.aiadvisors.pl/en) - Creator of n8n-mcp<br>
+  **Fork & Enhancements**: [Artemis Applied Research](https://github.com/ArtemisAI) - Advanced features and upstream contributions<br>
+  **License**: MIT - Open source and community-driven
+
+  This fork builds upon the excellent foundation created by Romuald Członkowski. We are committed to contributing improvements back to the upstream project while maintaining our own enhancements for enterprise and advanced use cases.
 </div>

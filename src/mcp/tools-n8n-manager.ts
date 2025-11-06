@@ -460,6 +460,24 @@ Examples:
       required: ['id']
     }
   },
+  {
+    name: 'n8n_retry_execution',
+    description: `Retry a failed execution with the same input data. Uses n8n API's retry endpoint to re-run the workflow.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { 
+          type: 'string', 
+          description: 'Execution ID to retry' 
+        },
+        loadWorkflow: { 
+          type: 'boolean', 
+          description: 'Whether to load the workflow definition (default: true)' 
+        }
+      },
+      required: ['id']
+    }
+  },
 
   // System Tools
   {
@@ -543,6 +561,72 @@ Examples:
         }
       },
       required: ['mode']
+    }
+  },
+  
+  // Credential Management Tools
+  {
+    name: 'n8n_create_credential',
+    description: `Create a new credential. WARNING: Handle credential data securely. The API returns metadata only, not the credential secrets.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Credential name (must be unique)'
+        },
+        type: {
+          type: 'string',
+          description: 'Credential type (e.g., "httpBasicAuth", "gmailOAuth2Api"). Use n8n_get_credential_schema to see available fields.'
+        },
+        data: {
+          type: 'object',
+          description: 'Credential data object with type-specific fields. Structure varies by credential type.'
+        }
+      },
+      required: ['name', 'type', 'data']
+    }
+  },
+  {
+    name: 'n8n_get_credential',
+    description: `Get credential metadata. NOTE: Does NOT return sensitive credential data (passwords, tokens). Only returns id, name, type, timestamps.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Credential ID'
+        }
+      },
+      required: ['id']
+    }
+  },
+  {
+    name: 'n8n_delete_credential',
+    description: `Delete a credential. WARNING: This will break workflows using this credential. Use with caution.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Credential ID to delete'
+        }
+      },
+      required: ['id']
+    }
+  },
+  {
+    name: 'n8n_get_credential_schema',
+    description: `Get the schema for a credential type. Shows which fields are required and their types. Useful for building credential creation forms.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        credentialTypeName: {
+          type: 'string',
+          description: 'Credential type name (e.g., "httpBasicAuth", "gmailOAuth2Api", "slackOAuth2Api")'
+        }
+      },
+      required: ['credentialTypeName']
     }
   }
 ];
