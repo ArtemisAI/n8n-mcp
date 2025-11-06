@@ -10,6 +10,7 @@ import {
   Credential,
   CredentialListParams,
   CredentialListResponse,
+  CredentialSchema,
   Tag,
   TagListParams,
   TagListResponse,
@@ -368,6 +369,23 @@ export class N8nApiClient {
   async deleteCredential(id: string): Promise<void> {
     try {
       await this.client.delete(`/credentials/${id}`);
+    } catch (error) {
+      throw handleN8nApiError(error);
+    }
+  }
+
+  /**
+   * Get credential type schema for dynamic form building
+   * 
+   * @param credentialTypeName - The credential type (e.g., 'httpBasicAuth', 'gmailOAuth2Api')
+   * @returns Credential schema with field definitions
+   */
+  async getCredentialSchema(credentialTypeName: string): Promise<CredentialSchema> {
+    try {
+      const response = await this.client.get<CredentialSchema>(
+        `/credentials/schema/${credentialTypeName}`
+      );
+      return response.data;
     } catch (error) {
       throw handleN8nApiError(error);
     }

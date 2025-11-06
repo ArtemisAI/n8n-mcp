@@ -122,6 +122,18 @@ export interface Credential {
   updatedAt?: string;
 }
 
+export interface CredentialSchema {
+  type: string;
+  displayName: string;
+  properties: Array<{
+    name: string;
+    type: string;
+    required?: boolean;
+    displayName?: string;
+    typeOptions?: Record<string, unknown>;
+  }>;
+}
+
 // Tag Types
 export interface Tag {
   id?: string;
