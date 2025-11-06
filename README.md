@@ -992,6 +992,14 @@ These powerful tools allow you to manage n8n workflows directly from Claude. The
 - **`n8n_retry_execution`** - Retry failed executions with same input data (NEW in v2.22.10!)
 - **`n8n_delete_execution`** - Delete execution records
 
+#### Tag Management
+- **`n8n_create_tag`** - Create new tags for organizing workflows
+- **`n8n_list_tags`** - List all available tags with workflow counts
+- **`n8n_get_tag`** - Get details about a specific tag including workflows using it
+- **`n8n_update_tag`** - Update tag name (changes apply to all workflows)
+- **`n8n_delete_tag`** - Delete a tag (removes from all workflows)
+- **`n8n_update_workflow_tags`** - Set tags for a workflow (replaces existing tags)
+
 #### System Tools
 - **`n8n_health_check`** - Check n8n API connectivity and features
 - **`n8n_diagnostic`** - Troubleshoot management tools visibility and configuration issues
