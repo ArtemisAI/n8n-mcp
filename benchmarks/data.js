@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762402148934,
+  "lastUpdate": 1762407512008,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -85,6 +85,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/54b380b7e2818f3ed89748e193e68c7dba8ae8cf"
         },
         "date": 1762402148291,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": true,
+          "id": "cea9fcf54af41ba177ade0fb17ac414d58e01940",
+          "message": "docs: update tracking to reflect Feature 006 (Tag Management) completion\n\n- Mark Phase 3 as 100% complete (1/1 features)\n- Update overall progress: 5/9 features complete (56%)\n- Add comprehensive testing results\n- Document all 6 tag tools verified and working\n- Update next milestone: Complete Feature 005 (User Management)",
+          "timestamp": "2025-11-06T00:36:48-05:00",
+          "tree_id": "bbcd06297e4be08bfaf51be35a72858bae13e6ac",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/cea9fcf54af41ba177ade0fb17ac414d58e01940"
+        },
+        "date": 1762407511640,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
