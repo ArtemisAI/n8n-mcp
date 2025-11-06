@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762407512008,
+  "lastUpdate": 1762410872981,
   "repoUrl": "https://github.com/ArtemisAI/n8n-mcp",
   "entries": {
     "n8n-mcp Benchmarks": [
@@ -116,6 +116,37 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/ArtemisAI/n8n-mcp/commit/cea9fcf54af41ba177ade0fb17ac414d58e01940"
         },
         "date": 1762407511640,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "sample - array sorting - small",
+            "value": 0.0136,
+            "range": "0.3096",
+            "unit": "ms",
+            "extra": "73341 ops/sec"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "committer": {
+            "email": "daniel@artemis-ai.ca",
+            "name": "ArtemisAI",
+            "username": "ArtemisAI"
+          },
+          "distinct": true,
+          "id": "a0e4077034fa4b5eb23d39a32fe15396b9622ac5",
+          "message": "docs: mark Feature 009 complete - 6/9 features ready for upstream PR",
+          "timestamp": "2025-11-06T01:32:38-05:00",
+          "tree_id": "62d9513dde69f4c98475af23743aa7402d4c8a5e",
+          "url": "https://github.com/ArtemisAI/n8n-mcp/commit/a0e4077034fa4b5eb23d39a32fe15396b9622ac5"
+        },
+        "date": 1762410872741,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
