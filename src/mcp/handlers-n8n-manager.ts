@@ -1606,8 +1606,8 @@ export async function handleListCredentials(args: unknown, context?: InstanceCon
     const validatedArgs = schema.parse(args);
     const client = ensureApiConfigured(context);
     
-    const filter = validatedArgs.type ? { type: validatedArgs.type } : undefined;
-    const result = await client.listCredentials(filter);
+    const params = validatedArgs.type ? { filter: { type: validatedArgs.type } } : undefined;
+    const result = await client.listCredentials(params);
     
     return {
       success: true,
