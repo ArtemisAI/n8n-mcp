@@ -401,7 +401,7 @@ export class N8nApiClient {
 
   async updateTag(id: string, tag: Partial<Tag>): Promise<Tag> {
     try {
-      const response = await this.client.patch(`/tags/${id}`, tag);
+      const response = await this.client.put(`/tags/${id}`, tag);
       return response.data;
     } catch (error) {
       throw handleN8nApiError(error);
