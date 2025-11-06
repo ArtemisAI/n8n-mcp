@@ -5,6 +5,12 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
+      // CRITICAL: Use parent .env file, NOT .env.test (which has mock API URLs)
+      // Integration tests need REAL n8n API credentials from ../../.env
+      env: {
+        ...process.env
+      },
+      envFile: false, // Don't load .env.test for integration tests
       // Include global setup, but NOT integration-setup.ts for n8n-api tests
       // (they need real network requests, not MSW mocks)
       setupFiles: ['./tests/setup/global-setup.ts'],
